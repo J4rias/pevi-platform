@@ -55,7 +55,7 @@ export default function SignupPage() {
         </div>
         <Card className="border-base-300/50 bg-base-200">
           <CardHeader className="text-center">
-            <CardTitle className="text-xl text-base-content">{t("signup.title")}</CardTitle>
+            <CardTitle className="text-xl text-base-content pb-2">{t("signup.title")}</CardTitle>
             <CardDescription>{t("signup.subtitle")}</CardDescription>
           </CardHeader>
           <CardContent>

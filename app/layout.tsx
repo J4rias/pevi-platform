@@ -14,7 +14,7 @@ const roboto = Roboto({
 })
 
 export const metadata: Metadata = {
-  title: "PEVI - Programa de Estimulos con Verificacion de Impacto",
+  title: "PEVI - Impact Verification Incentive Program",
   description: "Manage incentive-based programs with transparent verification and Web3-powered rewards.",
 }
 

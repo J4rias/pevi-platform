@@ -1,7 +1,7 @@
 export const en: Record<string, string> = {
   // Common
   "common.pevi": "PEVI",
-  "common.tagline": "Programa de Estimulos con Verificacion de Impacto",
+  "common.tagline": "Impact Verification Incentive Program",
   "common.loading": "Loading...",
   "common.cancel": "Cancel",
   "common.save": "Save",

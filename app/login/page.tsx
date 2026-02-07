@@ -51,7 +51,7 @@ export default function LoginPage() {
         </div>
         <Card className="border-base-300/50 bg-base-200">
           <CardHeader className="text-center">
-            <CardTitle className="text-xl text-base-content">{t("login.title")}</CardTitle>
+            <CardTitle className="text-xl text-base-content pb-2">{t("login.title")}</CardTitle>
             <CardDescription>{t("login.subtitle")}</CardDescription>
           </CardHeader>
           <CardContent>
