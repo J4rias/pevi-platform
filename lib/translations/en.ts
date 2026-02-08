@@ -349,7 +349,7 @@ export const en: Record<string, string> = {
 
   // About page
   "about.title": "About PEVI",
-  "about.subtitle": "Programa de Est\u00edmulos con Verificaci\u00f3n de Impacto \u2014 an incentive platform that ensures every contribution creates real, verifiable change.",
+  "about.subtitle": "Impact Verification Incentive Program \u2014 an incentive platform that ensures every contribution creates real, verifiable change.",
   "about.whatIsTitle": "What is PEVI?",
   "about.whatIsDesc": "PEVI is a SaaS platform designed to manage incentive-based programs with transparent verification of impact. Corporations create campaigns with clear milestones, beneficiaries complete them and submit evidence, evaluators review the work, and verifiers audit the entire process. Angel investors can fund and track the impact of their contributions in real time.",
   "about.howItWorks": "How It Works",

@@ -79,7 +79,7 @@ export default function SignupPage() {
               </div>
               <div className="flex flex-col gap-2">
                 <Label htmlFor="role">{t("signup.userType")}</Label>
-                <Select onValueChange={(v) => setRole(v as UserRole)}>
+                <Select value={role} onValueChange={(v) => setRole(v as UserRole)}>
                   <SelectTrigger className="bg-base-100/50"><SelectValue placeholder={t("signup.selectRole")} /></SelectTrigger>
                   <SelectContent>
                     <SelectItem value="corporation">{t("role.corporation")}</SelectItem>

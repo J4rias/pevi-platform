@@ -35,7 +35,7 @@ export function PublicHeader() {
   }
 
   return (
-    <header className="sticky top-0 z-50 border-b border-base-300/50 bg-base-100/90 backdrop-blur-md">
+    <header className="sticky top-0 z-50 border-b border-base-300/50 bg-base-100/90 backdrop-blur-md" suppressHydrationWarning>
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 lg:px-8">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2.5">
