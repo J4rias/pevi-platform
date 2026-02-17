@@ -12,7 +12,7 @@ import {
   LayoutDashboard, Megaphone, Users, FileCheck, ShieldCheck, Target, Upload,
   ClipboardCheck, LogOut, UserCircle, PlusCircle, UserCog, Compass, BarChart3, CreditCard,
 } from "lucide-react"
-import type { UserRole } from "@/lib/mock-data"
+import type { UserRole } from "@/lib/types"
 
 const navByRole: Record<UserRole, { titleKey: string; href: string; icon: typeof LayoutDashboard }[]> = {
   corporation: [

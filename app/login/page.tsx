@@ -23,19 +23,20 @@ export default function LoginPage() {
   const [error, setError] = useState("")
   const [loading, setLoading] = useState(false)
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     setError("")
     setLoading(true)
-    setTimeout(() => {
-      const result = login(email, password)
+    try {
+      const result = await login(email, password)
       if (result.success) {
         router.push("/dashboard")
       } else {
         setError(result.error || t("login.failed"))
       }
+    } finally {
       setLoading(false)
-    }, 600)
+    }
   }
 
   return (

@@ -1,7 +1,9 @@
 "use client"
 
 import { createContext, useContext, useState, useCallback, useEffect, type ReactNode } from "react"
-import { users, type User, type UserRole } from "./mock-data"
+import { users, type User } from "./mock-data"
+import type { UserRole } from "./types"
+import { api } from "./api-client"
 
 function storeUser(u: User | null) {
   if (typeof window === "undefined") return
@@ -21,7 +23,7 @@ function loadUser(): User | null {
 
 interface AuthContextType {
   user: User | null
-  login: (email: string, password: string) => { success: boolean; error?: string }
+  login: (email: string, password: string) => Promise<{ success: boolean; error?: string }>
   signup: (email: string, password: string, name: string, role: UserRole) => { success: boolean; error?: string }
   updateWallet: (walletAddress: string) => void
   connectWallet: () => Promise<{ success: boolean; address?: string; error?: string }>
@@ -48,10 +50,23 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setIsLoading(false)
   }, [])
 
-  const login = useCallback((email: string, password: string) => {
-    const found = users.find((u) => u.email === email && u.password === password)
-    if (found) { setUser(found); storeUser(found); return { success: true } }
-    return { success: false, error: "Invalid email or password" }
+  const login = useCallback(async (email: string, password: string) => {
+    try {
+      const userData = await api.auth.login({ email, password })
+      const found: User = {
+        id: userData.id,
+        name: userData.name,
+        email: userData.email,
+        role: userData.role as User["role"],
+      }
+      setUser(found)
+      storeUser(found)
+      return { success: true }
+    } catch (err: unknown) {
+      const axiosErr = err as { response?: { data?: { error?: string } } }
+      const message = axiosErr?.response?.data?.error || "Invalid email or password"
+      return { success: false, error: message }
+    }
   }, [])
 
   const signup = useCallback((email: string, password: string, name: string, role: UserRole) => {

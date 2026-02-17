@@ -44,6 +44,34 @@ export interface IncludeParams {
 
 export type ListParams = PaginationParams & IncludeParams;
 
+// Auth types
+export interface SignupPayload {
+  fullName: string;
+  email: string;
+  password: string;
+  role: string;
+}
+
+export interface SignupResponse {
+  user_id: number;
+  fullName: string;
+  email: string;
+  role: string;
+  status: string | null;
+}
+
+export interface LoginPayload {
+  email: string;
+  password: string;
+}
+
+export interface LoginResponse {
+  id: string;
+  name: string;
+  email: string;
+  role: string;
+}
+
 /**
  * Generic CRUD operations for a resource
  */
@@ -111,6 +139,17 @@ export const api = {
   activities: new ResourceClient('/activities'),
   awards: new ResourceClient('/awards'),
   campaignStaff: new ResourceClient('/campaign-staff'),
+
+  auth: {
+    async signup(payload: SignupPayload): Promise<SignupResponse> {
+      const { data } = await apiClient.post('/auth/signup', payload);
+      return data;
+    },
+    async login(payload: LoginPayload): Promise<LoginResponse> {
+      const { data } = await apiClient.post('/auth/login', payload);
+      return data;
+    },
+  },
 };
 
 /**
