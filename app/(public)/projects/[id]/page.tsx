@@ -1,9 +1,10 @@
 "use client"
 
-import { use } from "react"
+import { use, useState } from "react"
 import Link from "next/link"
 import { notFound } from "next/navigation"
 import { campaigns, users } from "@/lib/mock-data"
+import { DonationModal } from "@/components/donation-modal"
 
 function formatNumber(n: number): string {
   return new Intl.NumberFormat("en-US").format(n)
@@ -43,6 +44,7 @@ export default function ProjectDetailsPage({
   const { id } = use(params)
   const { t } = useTranslation()
   const { user, isAuthenticated } = useAuth()
+  const [showDonation, setShowDonation] = useState(false)
 
   const campaign = campaigns.find((c) => c.id === id)
   if (!campaign) {
@@ -297,9 +299,11 @@ export default function ProjectDetailsPage({
                 {t("public.ctaJoinSubtitle")}
               </p>
               <div className="mt-5 flex flex-col items-center justify-center gap-3 sm:flex-row">
-                {(user?.role === "beneficiary" ||
-                  user?.role === "angel_investor") && (
+                {user?.role === "beneficiary" && (
                   <Button>{t("public.joinProject")}</Button>
+                )}
+                {user?.role === "angel_investor" && (
+                  <Button onClick={() => setShowDonation(true)}>{t("public.joinProject")}</Button>
                 )}
                 <Link href="/dashboard">
                   <Button variant="outline">
@@ -311,6 +315,14 @@ export default function ProjectDetailsPage({
           )}
         </CardContent>
       </Card>
+
+      {showDonation && (
+        <DonationModal
+          campaignId={campaign.id}
+          campaignName={campaign.name}
+          onClose={() => setShowDonation(false)}
+        />
+      )}
     </div>
   )
 }

@@ -16,7 +16,7 @@ export function BeneficiaryOverview() {
   const { t } = useTranslation()
   if (!user) return null
 
-  const myCampaigns = campaigns.filter((c) => c.beneficiaries.includes(user.id))
+  const myCampaigns = campaigns.filter((c) => c.beneficiaries.includes(user.id) && c.status !== "draft")
   const myEvidences = evidences.filter((e) => e.beneficiaryId === user.id)
   const approvedMilestones = myCampaigns.flatMap((c) => c.milestones).filter((m) => m.status === "approved")
   const pendingInvitations = invitations.filter((i) => i.beneficiaryId === user.id && i.status === "pending")

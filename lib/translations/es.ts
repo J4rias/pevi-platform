@@ -110,6 +110,7 @@ export const es: Record<string, string> = {
   "wallet.copy": "Copiar",
   "wallet.copied": "Copiado",
   "wallet.disconnect": "Desconectar",
+  "wallet.update": "Actualizar",
   "wallet.connectDescription": "Conecta tu billetera Stellar para recibir recompensas on-chain",
   "wallet.connectedSuccess": "¡Billetera conectada exitosamente!",
   "wallet.connectionFailed": "Error de conexión. Intenta de nuevo.",
@@ -134,6 +135,14 @@ export const es: Record<string, string> = {
   "campaigns.beneficiaries": "{{count}} beneficiarios",
   "campaigns.milestonesDone": "{{done}}/{{total}} hitos completados",
   "campaigns.donate": "Donar",
+
+  // Modal de donación
+  "donation.title": "Donar a Campaña",
+  "donation.amountLabel": "Monto a donar",
+  "donation.amountPlaceholder": "Ingresa el monto",
+  "donation.button": "Donar",
+  "donation.cancel": "Cancelar",
+  "donation.thanks": "¡Muchas gracias por tu donación!",
 
   // Create Campaign
   "createCampaign.title": "Crear Campaña",

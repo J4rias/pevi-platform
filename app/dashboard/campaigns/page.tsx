@@ -1,5 +1,6 @@
 "use client"
 
+import { useState } from "react"
 import Link from "next/link"
 import { PlusCircle, Heart } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -8,12 +9,15 @@ import { StatusBadge } from "@/components/status-badge"
 import { campaigns } from "@/lib/mock-data"
 import { useTranslation } from "@/lib/i18n-context"
 import { useAuth } from "@/lib/auth-context"
+import { DonationModal } from "@/components/donation-modal"
 
 export default function CampaignsPage() {
   const { t } = useTranslation()
   const { user } = useAuth()
   const canCreate = user?.role === "corporation"
   const canDonate = user?.role === "angel_investor"
+  const [donatingCampaign, setDonatingCampaign] = useState<{ id: string; name: string } | null>(null)
+  const visibleCampaigns = canCreate ? campaigns : campaigns.filter((c) => c.status !== "draft")
 
   return (
     <div className="flex flex-col gap-6">
@@ -29,7 +33,7 @@ export default function CampaignsPage() {
         )}
       </div>
       <div className="flex flex-col gap-4">
-        {campaigns.map((c) => {
+        {visibleCampaigns.map((c) => {
           const done = c.milestones.filter((m) => m.status === "approved").length
           const pct = c.milestones.length ? Math.round((done / c.milestones.length) * 100) : 0
           return (
@@ -52,7 +56,12 @@ export default function CampaignsPage() {
                 </div>
                 {canDonate && (
                   <div className="mt-4">
-                    <Button size="sm" variant="outline" className="border-primary/50 text-primary hover:bg-primary/10">
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      className="border-primary/50 text-primary hover:bg-primary/10"
+                      onClick={() => setDonatingCampaign({ id: c.id, name: c.name })}
+                    >
                       <Heart className="mr-2 h-4 w-4" />{t("campaigns.donate")}
                     </Button>
                   </div>
@@ -62,6 +71,14 @@ export default function CampaignsPage() {
           )
         })}
       </div>
+
+      {donatingCampaign && (
+        <DonationModal
+          campaignId={donatingCampaign.id}
+          campaignName={donatingCampaign.name}
+          onClose={() => setDonatingCampaign(null)}
+        />
+      )}
     </div>
   )
 }
