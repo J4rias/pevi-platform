@@ -217,6 +217,7 @@ export const es: Record<string, string> = {
   "explore.none": "No hay campañas disponibles en este momento.",
   "explore.enrolled": "Inscrito",
   "explore.apply": "Solicitar Unirse",
+  "explore.decline": "Rechazar",
   "explore.budget": "Presupuesto: {{amount}} {{currency}}",
   "explore.milestones": "{{count}} hitos",
 

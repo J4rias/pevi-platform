@@ -36,7 +36,10 @@ export default function ExplorePage() {
                     {alreadyIn ? (
                       <span className="inline-flex items-center rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 text-xs font-medium text-emerald-400">{t("explore.enrolled")}</span>
                     ) : (
-                      <Button size="sm">{t("explore.apply")}</Button>
+                      <div className="flex gap-2">
+                        <Button size="sm">{t("explore.apply")}</Button>
+                        <Button size="sm" variant="outline">{t("explore.decline")}</Button>
+                      </div>
                     )}
                   </div>
                 </CardContent>
