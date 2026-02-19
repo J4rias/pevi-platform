@@ -5,9 +5,9 @@ import React from "react"
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
-import { useAuth } from "@/lib/auth-context"
 import { useTranslation } from "@/lib/i18n-context"
-import type { UserRole } from "@/lib/mock-data"
+import { api } from "@/lib/api-client"
+import type { UserRole } from "@/lib/types"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -17,7 +17,6 @@ import { LanguageToggle } from "@/components/language-toggle"
 import { ThemeToggle } from "@/components/theme-toggle"
 
 export default function SignupPage() {
-  const { signup } = useAuth()
   const { t } = useTranslation()
   const router = useRouter()
   const [email, setEmail] = useState("")
@@ -28,18 +27,22 @@ export default function SignupPage() {
   const [error, setError] = useState("")
   const [loading, setLoading] = useState(false)
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     setError("")
     if (password !== confirmPassword) { setError(t("signup.passwordMismatch")); return }
     if (!role) { setError(t("signup.selectType")); return }
     setLoading(true)
-    setTimeout(() => {
-      const result = signup(email, password, name, role as UserRole)
-      if (result.success) router.push("/dashboard/profile")
-      else setError(result.error || t("signup.failed"))
+    try {
+      await api.auth.signup({ fullName: name, email, password, role })
+      router.push("/login")
+    } catch (err: unknown) {
+      const axiosErr = err as { response?: { data?: { error?: string } } }
+      const message = axiosErr?.response?.data?.error || t("signup.failed")
+      setError(message)
+    } finally {
       setLoading(false)
-    }, 600)
+    }
   }
 
   return (
@@ -79,7 +82,7 @@ export default function SignupPage() {
               </div>
               <div className="flex flex-col gap-2">
                 <Label htmlFor="role">{t("signup.userType")}</Label>
-                <Select onValueChange={(v) => setRole(v as UserRole)}>
+                <Select value={role} onValueChange={(v) => setRole(v as UserRole)}>
                   <SelectTrigger className="bg-base-100/50"><SelectValue placeholder={t("signup.selectRole")} /></SelectTrigger>
                   <SelectContent>
                     <SelectItem value="corporation">{t("role.corporation")}</SelectItem>

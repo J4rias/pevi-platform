@@ -1,15 +1,23 @@
 "use client"
 
+import { useState } from "react"
 import Link from "next/link"
-import { PlusCircle } from "lucide-react"
+import { PlusCircle, Heart } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { StatusBadge } from "@/components/status-badge"
 import { campaigns } from "@/lib/mock-data"
 import { useTranslation } from "@/lib/i18n-context"
+import { useAuth } from "@/lib/auth-context"
+import { DonationModal } from "@/components/donation-modal"
 
 export default function CampaignsPage() {
   const { t } = useTranslation()
+  const { user } = useAuth()
+  const canCreate = user?.role === "corporation"
+  const canDonate = user?.role === "angel_investor"
+  const [donatingCampaign, setDonatingCampaign] = useState<{ id: string; name: string } | null>(null)
+  const visibleCampaigns = canCreate ? campaigns : campaigns.filter((c) => c.status !== "draft")
 
   return (
     <div className="flex flex-col gap-6">
@@ -18,10 +26,14 @@ export default function CampaignsPage() {
           <h1 className="font-heading text-2xl font-bold tracking-tight">{t("campaigns.title")}</h1>
           <p className="text-sm text-base-content/60">{t("campaigns.subtitle")}</p>
         </div>
-        <Button asChild><Link href="/dashboard/campaigns/create"><PlusCircle className="mr-2 h-4 w-4" />{t("campaigns.new")}</Link></Button>
+        {canCreate ? (
+          <Button asChild><Link href="/dashboard/campaigns/create"><PlusCircle className="mr-2 h-4 w-4" />{t("campaigns.new")}</Link></Button>
+        ) : (
+          <Button disabled><PlusCircle className="mr-2 h-4 w-4" />{t("campaigns.new")}</Button>
+        )}
       </div>
       <div className="flex flex-col gap-4">
-        {campaigns.map((c) => {
+        {visibleCampaigns.map((c) => {
           const done = c.milestones.filter((m) => m.status === "approved").length
           const pct = c.milestones.length ? Math.round((done / c.milestones.length) * 100) : 0
           return (
@@ -42,11 +54,31 @@ export default function CampaignsPage() {
                 <div className="mt-2 h-1.5 rounded-full bg-base-300">
                   <div className="h-full rounded-full bg-primary transition-all" style={{ width: `${pct}%` }} />
                 </div>
+                {canDonate && (
+                  <div className="mt-4">
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      className="border-primary/50 text-primary hover:bg-primary/10"
+                      onClick={() => setDonatingCampaign({ id: c.id, name: c.name })}
+                    >
+                      <Heart className="mr-2 h-4 w-4" />{t("campaigns.donate")}
+                    </Button>
+                  </div>
+                )}
               </CardContent>
             </Card>
           )
         })}
       </div>
+
+      {donatingCampaign && (
+        <DonationModal
+          campaignId={donatingCampaign.id}
+          campaignName={donatingCampaign.name}
+          onClose={() => setDonatingCampaign(null)}
+        />
+      )}
     </div>
   )
 }
