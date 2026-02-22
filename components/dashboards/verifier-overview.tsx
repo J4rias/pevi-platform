@@ -17,7 +17,7 @@ export function VerifierOverview() {
   const { t } = useTranslation()
   if (!user) return null
 
-  const assignedCampaigns = campaigns.filter((c) => c.verifierId === user.id)
+  const assignedCampaigns = campaigns.filter((c) => c.verifierId === user.id && c.status !== "draft")
   const assignedEvalIds = new Set(assignedCampaigns.map((c) => c.id))
   const relevantEvals = evaluations.filter((ev) => {
     const evidence = campaigns.flatMap((c) => c.milestones).length > 0

@@ -6,8 +6,16 @@ instrumentation-client.js
 instrumentation-client.ts
 
 # Common ignores
-node_modules/
+node_modules
 .next/
 .env*.local
 .DS_Store
 .claude/
+
+# Prisma
+.env
+*.db
+*.db-journal
+prisma/migrations/
+#MCP
+.mcp.json

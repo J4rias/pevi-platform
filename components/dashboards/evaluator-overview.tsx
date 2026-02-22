@@ -16,7 +16,7 @@ export function EvaluatorOverview() {
   const { t } = useTranslation()
   if (!user) return null
 
-  const assignedCampaigns = campaigns.filter((c) => c.evaluatorId === user.id)
+  const assignedCampaigns = campaigns.filter((c) => c.evaluatorId === user.id && c.status !== "draft")
   const pendingEvidence = evidences.filter((e) => {
     const c = campaigns.find((ca) => ca.id === e.campaignId)
     return c?.evaluatorId === user.id && e.status === "pending"

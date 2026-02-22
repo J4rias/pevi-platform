@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useAuth } from "@/lib/auth-context"
 import { useTranslation } from "@/lib/i18n-context"
-import { Wallet, Check, Copy, Loader2, Unplug, AlertCircle } from "lucide-react"
+import { Wallet, Check, Copy, Loader2, Unplug, AlertCircle, Pencil } from "lucide-react"
 
 export function WalletConnect() {
   const { user, connectWallet, disconnectWallet, updateWallet } = useAuth()
@@ -18,6 +18,8 @@ export function WalletConnect() {
   const [copied, setCopied] = useState(false)
   const [manualMode, setManualMode] = useState(false)
   const [manualAddress, setManualAddress] = useState("")
+  const [updateMode, setUpdateMode] = useState(false)
+  const [updateAddress, setUpdateAddress] = useState("")
 
   if (!user) return null
   const connected = !!user.walletAddress
@@ -45,6 +47,19 @@ export function WalletConnect() {
     disconnectWallet()
     setSuccess("")
     setError("")
+    setUpdateMode(false)
+  }
+
+  const handleUpdateSave = () => {
+    if (!updateAddress.startsWith("G") || updateAddress.length < 20) {
+      setError(t("wallet.invalidAddress"))
+      return
+    }
+    updateWallet(updateAddress)
+    setUpdateMode(false)
+    setUpdateAddress("")
+    setSuccess(t("wallet.addressSaved"))
+    setTimeout(() => setSuccess(""), 3000)
   }
 
   const handleManualSave = () => {
@@ -95,14 +110,28 @@ export function WalletConnect() {
               <p className="text-xs text-base-content/60">{t("wallet.walletAddress")}</p>
               <p className="mt-1 break-all font-mono text-sm text-base-content">{user.walletAddress}</p>
             </div>
-            <div className="flex gap-2">
-              <Button variant="outline" size="sm" onClick={handleCopy}>
-                {copied ? <><Check className="mr-1 h-3 w-3" />{t("wallet.copied")}</> : <><Copy className="mr-1 h-3 w-3" />{t("wallet.copyAddress")}</>}
-              </Button>
-              <Button variant="outline" size="sm" onClick={handleDisconnect} className="text-error hover:text-error bg-transparent">
-                <Unplug className="mr-1 h-3 w-3" />{t("wallet.disconnect")}
-              </Button>
-            </div>
+            {updateMode ? (
+              <div className="flex flex-col gap-2">
+                <Label>{t("wallet.stellarAddress")}</Label>
+                <Input value={updateAddress} onChange={(e) => setUpdateAddress(e.target.value)} placeholder={t("wallet.addressPlaceholder")} className="bg-base-100/50 font-mono text-sm" />
+                <div className="flex gap-2">
+                  <Button size="sm" onClick={handleUpdateSave}>{t("wallet.saveAddress")}</Button>
+                  <Button variant="outline" size="sm" onClick={() => { setUpdateMode(false); setUpdateAddress(""); setError("") }}>{t("common.cancel")}</Button>
+                </div>
+              </div>
+            ) : (
+              <div className="flex gap-2">
+                <Button variant="outline" size="sm" onClick={handleCopy}>
+                  {copied ? <><Check className="mr-1 h-3 w-3" />{t("wallet.copied")}</> : <><Copy className="mr-1 h-3 w-3" />{t("wallet.copyAddress")}</>}
+                </Button>
+                <Button variant="outline" size="sm" onClick={() => { setUpdateMode(true); setError(""); setSuccess("") }}>
+                  <Pencil className="mr-1 h-3 w-3" />{t("wallet.update") || "Update"}
+                </Button>
+                <Button variant="outline" size="sm" onClick={handleDisconnect} className="text-error hover:text-error bg-transparent">
+                  <Unplug className="mr-1 h-3 w-3" />{t("wallet.disconnect")}
+                </Button>
+              </div>
+            )}
           </div>
         ) : manualMode ? (
           <div className="flex flex-col gap-3">

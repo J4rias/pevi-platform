@@ -11,7 +11,8 @@ import { useTranslation } from "@/lib/i18n-context"
 export function InvestorOverview() {
   const { unreadCount } = useNotifications()
   const { t } = useTranslation()
-  const totalBudget = campaigns.reduce((a, c) => a + c.budget, 0)
+  const visibleCampaigns = campaigns.filter((c) => c.status !== "draft")
+  const totalBudget = visibleCampaigns.reduce((a, c) => a + c.budget, 0)
   const totalPaid = payments.reduce((a, p) => a + p.amount, 0)
 
   return (
@@ -29,7 +30,7 @@ export function InvestorOverview() {
       )}
 
       <div className="grid gap-4 sm:grid-cols-3">
-        <StatCard title={t("invOverview.totalCampaigns")} value={campaigns.length} icon={Megaphone} />
+        <StatCard title={t("invOverview.totalCampaigns")} value={visibleCampaigns.length} icon={Megaphone} />
         <StatCard title={t("invOverview.totalBudget")} value={t("invOverview.budgetAmount", { amount: totalBudget.toLocaleString() })} icon={DollarSign} />
         <StatCard title={t("invOverview.totalDisbursed")} value={t("invOverview.budgetAmount", { amount: totalPaid.toLocaleString() })} icon={Target} />
       </div>
@@ -38,7 +39,7 @@ export function InvestorOverview() {
         <CardHeader><CardTitle className="text-base">{t("invOverview.allCampaigns")}</CardTitle></CardHeader>
         <CardContent>
           <div className="flex flex-col gap-3">
-            {campaigns.map((c) => (
+            {visibleCampaigns.map((c) => (
               <div key={c.id} className="flex items-center justify-between rounded-lg border border-base-300/50 bg-base-300/30 p-3">
                 <div>
                   <p className="text-sm font-medium text-base-content">{c.name}</p>
